@@ -15,6 +15,7 @@ class _AddPageState extends State<AddPage> {
   TextEditingController descriptioncontroller = TextEditingController();
 
   bool isEdit = false;
+
   @override
   void initState() {
     super.initState();
@@ -58,25 +59,25 @@ class _AddPageState extends State<AddPage> {
   Future<void> updateData() async {
     final todo = widget.todo;
     if (todo == null) {
-      print('You cannot call updated without todo data');
+      print('You cannot call update without todo data');
       return;
     }
     final id = todo['_id'];
-
     final title = titlecontroller.text;
     final description = descriptioncontroller.text;
     final body = {
       "title": title,
       "description": description,
-      "is_completed": false
+      "is_completed": false,
     };
-    final url = ' https://api.nstack.in/v1/todos/$id';
+    final url = 'https://api.nstack.in/v1/todos/$id';
     final uri = Uri.parse(url);
-    final response = await http.put(uri, body: jsonEncode(body), headers: {
-      'Content-Type': 'application/json',
-    });
+    final response = await http.put(uri,
+        body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
+
     if (response.statusCode == 200) {
       showSuccessMessage('Updation is Success');
+      Navigator.of(context).pop(true); // Pass true to indicate success
     } else {
       showErrorMessage('Updation is Failed');
     }
@@ -99,6 +100,7 @@ class _AddPageState extends State<AddPage> {
       titlecontroller.text = '';
       descriptioncontroller.text = '';
       showSuccessMessage('Creation is Success');
+      Navigator.of(context).pop(true); // Navigate back and indicate success
     } else {
       showErrorMessage('Creation is Failed');
     }
